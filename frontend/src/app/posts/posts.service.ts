@@ -16,8 +16,10 @@ export class PostsService {
       .get<{ message: string; posts: Post[] }>(
         'http://localhost:3000/api/posts'
       )
-      .subscribe((postsData) => {
-        this._posts = postsData.posts;
+      .subscribe((responseData) => {
+        console.log(responseData.message);
+
+        this._posts = responseData.posts;
         this._postsUpdated.next([...this._posts]);
       });
   }
@@ -28,7 +30,17 @@ export class PostsService {
 
   addPost(title: string, content: string) {
     const post: Post = { title: title, content: content };
-    this._posts.push(post);
-    this._postsUpdated.next([...this._posts]);
+
+    this.http
+      .post<{ message: string; post: Post }>(
+        'http://localhost:3000/api/posts',
+        post
+      )
+      .subscribe((responseData) => {
+        console.log(responseData.message);
+
+        this._posts.push(responseData.post);
+        this._postsUpdated.next([...this._posts]);
+      });
   }
 }

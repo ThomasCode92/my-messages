@@ -11,3 +11,16 @@ services:
       - ./frontend:/app
       - /app/node_modules
     container_name: frontend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../dockerfiles/backend.Dockerfile
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+    container_name: backend

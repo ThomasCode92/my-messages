@@ -1,8 +1,21 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
 const Post = require('./models/post.model');
 
 const app = express();
+
+mongoose
+  .connect(
+    `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@mongodb:27017/mymessages?authSource=admin`
+  )
+  .then(() => {
+    console.log('Connected to database');
+  })
+  .catch((error) => {
+    console.log(error);
+    console.log('Connection failed');
+  });
 
 app.use(express.json());
 

@@ -1,5 +1,7 @@
 const express = require('express');
 
+const Post = require('./models/post.model');
+
 const app = express();
 
 app.use(express.json());
@@ -41,7 +43,10 @@ app.get('/api/posts', (req, res, next) => {
 });
 
 app.post('/api/posts', (req, res, next) => {
-  const post = req.body;
+  const { title, content } = req.body;
+
+  const post = new Post({ title, content });
+
   console.log(post);
 
   res.status(201).json({ message: 'Post added succesfully!', post });

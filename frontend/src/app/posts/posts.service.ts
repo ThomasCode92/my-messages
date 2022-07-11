@@ -61,6 +61,11 @@ export class PostsService {
       .delete<{ message: string }>('http://localhost:3000/api/posts/' + postId)
       .subscribe(responseData => {
         console.log(responseData.message);
+
+        const updatedPosts = this._posts.filter(post => post.id !== postId);
+
+        this._posts = updatedPosts;
+        this._postsUpdated.next([...this._posts]);
       });
   }
 }

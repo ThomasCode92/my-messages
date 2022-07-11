@@ -12,7 +12,7 @@ mongoose
   .then(() => {
     console.log('Connected to database');
   })
-  .catch((error) => {
+  .catch(error => {
     console.log(error);
     console.log('Connection failed');
   });
@@ -34,25 +34,9 @@ app.use((req, res, next) => {
 });
 
 app.get('/api/posts', (req, res, next) => {
-  const posts = [
-    {
-      id: 'abc123',
-      title: 'First Post',
-      content: "This is the first posts's content",
-    },
-    {
-      id: 'def456',
-      title: 'Second Post',
-      content: "This is the second posts's content",
-    },
-    {
-      id: 'ghi789',
-      title: 'Third Post',
-      content: "This is the third posts's content",
-    },
-  ];
-
-  res.status(200).json({ message: 'Posts fetched succesfully!', posts });
+  Post.find().then(posts => {
+    res.status(200).json({ message: 'Posts fetched succesfully!', posts });
+  });
 });
 
 app.post('/api/posts', (req, res, next) => {

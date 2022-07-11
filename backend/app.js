@@ -48,4 +48,12 @@ app.post('/api/posts', (req, res, next) => {
   res.status(201).json({ message: 'Post added succesfully!', post });
 });
 
+app.delete('/api/posts/:id', (req, res, next) => {
+  const postId = req.params.id;
+
+  Post.deleteOne({ _id: postId }).then(() => {
+    res.status(201).json({ message: 'Post deleted succesfully!' });
+  });
+});
+
 module.exports = app;

@@ -18,9 +18,36 @@ services:
     ports:
       - "3000:3000"
       - "9229:9229"
+    env_file:
+      - ./env/backend.env
     volumes:
       - ./backend:/app
       - /app/node_modules
+    depends_on:
+      - database
     stdin_open: true
     tty: true
     container_name: backend
+  database:
+    image: mongo
+    ports:
+      - "27017:27017"
+    env_file:
+      - ./env/mongodb.env
+    volumes:
+      - mongodb-data:/data/db
+    container_name: mongodb
+  npm:
+    image: thomascode92/docker-util:mynpm
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./backend:/app
+    profiles:
+      - tools
+    container_name: mynpm
+
+volumes:
+  mongodb-data:
+    name: mongodb-data
+    external: true

@@ -1,6 +1,21 @@
 const express = require('express');
+const mongoose = require('mongoose');
+
+const Post = require('./models/post.model');
 
 const app = express();
+
+mongoose
+  .connect(
+    `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@mongodb:27017/mymessages?authSource=admin`
+  )
+  .then(() => {
+    console.log('Connected to database');
+  })
+  .catch(error => {
+    console.log(error);
+    console.log('Connection failed');
+  });
 
 app.use(express.json());
 
@@ -19,32 +34,28 @@ app.use((req, res, next) => {
 });
 
 app.get('/api/posts', (req, res, next) => {
-  const posts = [
-    {
-      id: 'abc123',
-      title: 'First Post',
-      content: "This is the first posts's content",
-    },
-    {
-      id: 'def456',
-      title: 'Second Post',
-      content: "This is the second posts's content",
-    },
-    {
-      id: 'ghi789',
-      title: 'Third Post',
-      content: "This is the third posts's content",
-    },
-  ];
-
-  res.status(200).json({ message: 'Posts fetched succesfully!', posts });
+  Post.find().then(posts => {
+    res.status(200).json({ message: 'Posts fetched succesfully!', posts });
+  });
 });
 
 app.post('/api/posts', (req, res, next) => {
-  const post = req.body;
-  console.log(post);
+  const { title, content } = req.body;
 
-  res.status(201).json({ message: 'Post added succesfully!', post });
+  const post = new Post({ title, content });
+  post.save().then(createdPost => {
+    res
+      .status(201)
+      .json({ message: 'Post added succesfully!', postId: createdPost._id });
+  });
+});
+
+app.delete('/api/posts/:id', (req, res, next) => {
+  const postId = req.params.id;
+
+  Post.deleteOne({ _id: postId }).then(() => {
+    res.status(201).json({ message: 'Post deleted succesfully!' });
+  });
 });
 
 module.exports = app;

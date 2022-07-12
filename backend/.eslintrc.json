@@ -4,6 +4,7 @@
   "rules": {
     "prettier/prettier": "warn",
     "no-console": "off",
-    "no-unused-vars": ["error", { "args": "none" }]
+    "no-unused-vars": ["error", { "args": "none" }],
+    "no-underscore-dangle": ["error", { "allow": ["_id"] }]
   }
 }

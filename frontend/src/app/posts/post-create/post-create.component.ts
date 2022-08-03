@@ -14,10 +14,10 @@ import { Post } from '../post.model';
 export class PostCreateComponent implements OnInit {
   private mode: 'create' | 'edit' = 'create';
   private postId: string;
-  private post: Post;
 
   enteredTitle = '';
   enteredContent = '';
+  post: Post;
 
   constructor(
     private postsService: PostsService,
@@ -37,13 +37,19 @@ export class PostCreateComponent implements OnInit {
     });
   }
 
-  onAddPost(form: NgForm) {
+  onSavePost(form: NgForm) {
     if (form.invalid) return;
 
     const title = form.value.title;
     const content = form.value.content;
 
-    this.postsService.addPost(title, content);
+    if (this.mode === 'create') {
+      this.postsService.addPost(title, content);
+    }
+
+    if (this.mode === 'edit') {
+      this.postsService.updatePost(this.postId, title, content);
+    }
 
     form.resetForm();
   }

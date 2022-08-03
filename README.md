@@ -1,14 +1,14 @@
 # MyMessages - Share it with the World
 
-Welcome to the Source Code of the MyMessage app.</br>
-The one app for sharing messages and reviews!
+Welcome to the Source Code of the __MyMessage App__.</br>
+The one app for sharing messages with the world!
 
 ## About the Project
 
 ### Summary
 
-This project is an hybrid between a _Twitter Clone_ and a _Yelp Clone_. Yet, the foundation for this app is the [MEAN Stack Guide](https://www.udemy.com/course/angular-2-and-nodejs-the-practical-guide/) from [academind.com/](https://academind.com).</br>
-In this app, you can share messages and pictures with the world (like Twitter) or discover and review places acros the world (like Yelp).
+This project is a (very small) _Twitter Clone_. With this application, you can share messages and pictures with the world.</br>
+Yet, the foundation for this app is the [MEAN Stack Guide](https://www.udemy.com/course/angular-2-and-nodejs-the-practical-guide/) from [Academind](https://academind.com).
 
 ### Core technologies
 

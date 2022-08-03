@@ -5,6 +5,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { PostsService } from '../posts.service';
 
 import { Post } from '../post.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-post-create',
@@ -29,7 +30,11 @@ export class PostCreateComponent implements OnInit {
       if (paramMap.has('postId')) {
         this.mode = 'edit';
         this.postId = paramMap.get('postId');
-        this.post = this.postsService.getPost(this.postId);
+        this.postsService.getPost(this.postId).subscribe(postData => {
+          console.log(postData.message);
+
+          this.post = postData.post;
+        });
       } else {
         this.mode = 'create';
         this.postId = null;

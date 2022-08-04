@@ -18,6 +18,7 @@ export class PostCreateComponent implements OnInit {
   isLoading = false;
   enteredTitle = '';
   enteredContent = '';
+  imagePreview: string;
   post: Post;
   form: FormGroup;
 
@@ -83,10 +84,16 @@ export class PostCreateComponent implements OnInit {
   }
 
   onImagePicked(event: Event) {
-    const inputElement = event.target as HTMLInputElement;
+    const inputElement = <HTMLInputElement>event.target;
     const file = inputElement.files[0];
 
     this.form.patchValue({ image: file });
     this.form.get('image').updateValueAndValidity();
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = <string>reader.result;
+    };
+    reader.readAsDataURL(file);
   }
 }

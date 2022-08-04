@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
 import { PostsService } from '../posts.service';
 
 import { Post } from '../post.model';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-post-create',
@@ -20,6 +19,7 @@ export class PostCreateComponent implements OnInit {
   enteredTitle = '';
   enteredContent = '';
   post: Post;
+  form: FormGroup;
 
   constructor(
     private postsService: PostsService,
@@ -27,6 +27,15 @@ export class PostCreateComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.form = new FormGroup({
+      title: new FormControl(null, {
+        validators: [Validators.required, Validators.minLength(5)],
+      }),
+      content: new FormControl(null, {
+        validators: [Validators.required],
+      }),
+    });
+
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
         this.mode = 'edit';
@@ -38,6 +47,11 @@ export class PostCreateComponent implements OnInit {
 
           this.isLoading = false;
           this.post = postData.post;
+
+          this.form.setValue({
+            title: this.post.title,
+            content: this.post.content,
+          });
         });
       } else {
         this.mode = 'create';
@@ -46,13 +60,13 @@ export class PostCreateComponent implements OnInit {
     });
   }
 
-  onSavePost(form: NgForm) {
-    if (form.invalid) return;
+  onSavePost() {
+    if (this.form.invalid) return;
 
     this.isLoading = true;
 
-    const title = form.value.title;
-    const content = form.value.content;
+    const title = this.form.value.title;
+    const content = this.form.value.content;
 
     if (this.mode === 'create') {
       this.postsService.addPost(title, content);
@@ -62,6 +76,6 @@ export class PostCreateComponent implements OnInit {
       this.postsService.updatePost(this.postId, title, content);
     }
 
-    form.resetForm();
+    this.form.reset();
   }
 }

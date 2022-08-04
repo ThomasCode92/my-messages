@@ -22,8 +22,11 @@
       type="file" #filePicker
       (change)="onImagePicked($event)"/>
   </div>
+  <mat-error *ngIf="imagePreview && form.get('image').invalid">
+    Please select a valid image!
+  </mat-error>
   <div
-    *ngIf="imagePreview && imagePreview !== ''"
+    *ngIf="imagePreview && imagePreview !== '' && form.get('image').valid"
     class="image-preview">
     <img [src]="imagePreview" [alt]="form.value.title">
   </div>

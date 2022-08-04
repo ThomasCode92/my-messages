@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ɵ_sanitizeUrl } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
 import { PostsService } from '../posts.service';
 
 import { Post } from '../post.model';
+
+import { mimeType } from './mime-type.validator';
 
 @Component({
   selector: 'app-post-create',
@@ -23,6 +26,7 @@ export class PostCreateComponent implements OnInit {
   form: FormGroup;
 
   constructor(
+    private sanitizer: DomSanitizer,
     private postsService: PostsService,
     private route: ActivatedRoute
   ) {}
@@ -34,6 +38,7 @@ export class PostCreateComponent implements OnInit {
       }),
       image: new FormControl(null, {
         validators: [Validators.required],
+        asyncValidators: [mimeType],
       }),
       content: new FormControl(null, {
         validators: [Validators.required],
@@ -91,9 +96,14 @@ export class PostCreateComponent implements OnInit {
     this.form.get('image').updateValueAndValidity();
 
     const reader = new FileReader();
+
     reader.onload = () => {
-      this.imagePreview = <string>reader.result;
+      const readerResult = <string>reader.result;
+      const url = this.sanitizer.bypassSecurityTrustResourceUrl(readerResult);
+
+      this.imagePreview = <string>url;
     };
+
     reader.readAsDataURL(file);
   }
 }

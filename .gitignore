@@ -1,9 +1,4 @@
 node_modules
 
-# Image files
-.png
-.jpg
-.jpeg
-
 # Environment variables
 env

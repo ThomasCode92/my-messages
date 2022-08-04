@@ -23,6 +23,7 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
+      - images:/app/images
     depends_on:
       - database
     stdin_open: true
@@ -50,4 +51,7 @@ services:
 volumes:
   mongodb-data:
     name: mongodb-data
+    external: true
+  images:
+    name: mymessages-images
     external: true

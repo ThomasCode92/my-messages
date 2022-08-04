@@ -79,8 +79,6 @@ export class PostCreateComponent implements OnInit {
     const image = this.form.value.image;
 
     if (this.mode === 'create') {
-      console.log(image);
-
       this.postsService.addPost(title, content, image);
     }
 

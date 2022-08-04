@@ -48,8 +48,10 @@ router.get('/:id', (req, res, next) => {
   });
 });
 
-router.post('/', multer(storage).single('image'), (req, res, next) => {
+router.post('/', multer({ storage }).single('image'), (req, res, next) => {
   const { title, content } = req.body;
+
+  console.log(req.file);
 
   const post = new Post({ title, content });
   post.save().then(createdPost => {

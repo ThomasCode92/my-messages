@@ -1,4 +1,4 @@
-import { Component, OnInit, ɵ_sanitizeUrl } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, ParamMap } from '@angular/router';
@@ -76,9 +76,12 @@ export class PostCreateComponent implements OnInit {
 
     const title = this.form.value.title;
     const content = this.form.value.content;
+    const image = this.form.value.image;
 
     if (this.mode === 'create') {
-      this.postsService.addPost(title, content);
+      console.log(image);
+
+      this.postsService.addPost(title, content, image);
     }
 
     if (this.mode === 'edit') {

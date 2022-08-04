@@ -16,6 +16,7 @@ export class PostCreateComponent implements OnInit {
   private mode: 'create' | 'edit' = 'create';
   private postId: string;
 
+  isLoading = false;
   enteredTitle = '';
   enteredContent = '';
   post: Post;
@@ -30,9 +31,12 @@ export class PostCreateComponent implements OnInit {
       if (paramMap.has('postId')) {
         this.mode = 'edit';
         this.postId = paramMap.get('postId');
+        this.isLoading = true;
+
         this.postsService.getPost(this.postId).subscribe(postData => {
           console.log(postData.message);
 
+          this.isLoading = false;
           this.post = postData.post;
         });
       } else {
@@ -44,6 +48,8 @@ export class PostCreateComponent implements OnInit {
 
   onSavePost(form: NgForm) {
     if (form.invalid) return;
+
+    this.isLoading = true;
 
     const title = form.value.title;
     const content = form.value.content;

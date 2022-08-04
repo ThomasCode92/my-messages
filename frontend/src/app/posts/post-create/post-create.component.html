@@ -1,5 +1,7 @@
 <mat-card>
-  <form (ngSubmit)="onSavePost(postForm)" #postForm="ngForm">
+  <form
+    *ngIf="!isLoading; else loadingSpinner"
+    (ngSubmit)="onSavePost(postForm)" #postForm="ngForm">
     <mat-form-field>
       <input
         matInput [ngModel]="post?.title"
@@ -29,4 +31,7 @@
       Save Post
     </button>
   </form>
+  <ng-template #loadingSpinner>
+    <mat-spinner></mat-spinner>
+  </ng-template>
 </mat-card>

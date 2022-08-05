@@ -12,9 +12,17 @@ export class PostsService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  public get posts() {
-    return this.http
-      .get<{ message: string; posts: any }>('http://localhost:3000/api/posts')
+  public get postsUpdated() {
+    return this._postsUpdated.asObservable();
+  }
+
+  getPosts(postsPerPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
+
+    this.http
+      .get<{ message: string; posts: any }>(
+        'http://localhost:3000/api/posts' + queryParams
+      )
       .pipe(
         map(responseData => {
           return {
@@ -36,10 +44,6 @@ export class PostsService {
         this._posts = postsData.posts;
         this._postsUpdated.next([...this._posts]);
       });
-  }
-
-  public get postsUpdated() {
-    return this._postsUpdated.asObservable();
   }
 
   getPost(postId: string) {

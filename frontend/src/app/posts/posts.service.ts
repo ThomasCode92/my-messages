@@ -97,12 +97,6 @@ export class PostsService {
       )
       .subscribe(postData => {
         console.log(postData.message);
-
-        const post = postData.post;
-
-        this._posts.push(post);
-        this._postsUpdated.next([...this._posts]);
-
         this.router.navigate(['/']);
       });
   }
@@ -131,32 +125,13 @@ export class PostsService {
       )
       .subscribe(responseData => {
         console.log(responseData.message);
-
-        const imagePath = 'responseData.imagePath';
-
-        const updatedPosts = [...this._posts];
-        const oldPostIndex = updatedPosts.findIndex(post => post.id === postId);
-        const post: Post = { id: postId, title, content, imagePath };
-
-        updatedPosts[oldPostIndex] = post;
-
-        this._posts = updatedPosts;
-        this._postsUpdated.next([...this._posts]);
-
         this.router.navigate(['/']);
       });
   }
 
   deletePost(postId: string) {
-    this.http
-      .delete<{ message: string }>('http://localhost:3000/api/posts/' + postId)
-      .subscribe(responseData => {
-        console.log(responseData.message);
-
-        const updatedPosts = this._posts.filter(post => post.id !== postId);
-
-        this._posts = updatedPosts;
-        this._postsUpdated.next([...this._posts]);
-      });
+    return this.http.delete<{ message: string }>(
+      'http://localhost:3000/api/posts/' + postId
+    );
   }
 }

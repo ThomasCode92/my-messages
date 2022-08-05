@@ -8,7 +8,7 @@ import { Post } from './post.model';
 @Injectable({ providedIn: 'root' })
 export class PostsService {
   private _posts: Post[] = [];
-  private _postsUpdated = new Subject<Post[]>();
+  private _postsUpdated = new Subject<{ posts: Post[]; postCount: number }>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -20,7 +20,7 @@ export class PostsService {
     const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
 
     this.http
-      .get<{ message: string; posts: any }>(
+      .get<{ message: string; posts: any; maxPosts: number }>(
         'http://localhost:3000/api/posts' + queryParams
       )
       .pipe(
@@ -35,6 +35,7 @@ export class PostsService {
                 imagePath: post.imagePath,
               };
             }),
+            maxPosts: responseData.maxPosts,
           };
         })
       )
@@ -42,7 +43,10 @@ export class PostsService {
         console.log(postsData.message);
 
         this._posts = postsData.posts;
-        this._postsUpdated.next([...this._posts]);
+        this._postsUpdated.next({
+          posts: [...this._posts],
+          postCount: postsData.maxPosts,
+        });
       });
   }
 

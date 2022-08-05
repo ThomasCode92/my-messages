@@ -40,9 +40,20 @@ router.get('/', (req, res, next) => {
     postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
   }
 
-  postQuery.then(posts => {
-    res.status(200).json({ message: 'Posts fetched successfully!', posts });
-  });
+  let fetchedPosts;
+
+  postQuery
+    .then(posts => {
+      fetchedPosts = posts;
+      return Post.count();
+    })
+    .then(count => {
+      res.status(200).json({
+        message: 'Posts fetched successfully!',
+        posts: fetchedPosts,
+        maxPosts: count,
+      });
+    });
 });
 
 router.get('/:id', (req, res, next) => {

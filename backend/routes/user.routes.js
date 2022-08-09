@@ -26,28 +26,37 @@ router.post('/signup', (req, res, next) => {
 router.post('/login', (req, res, next) => {
   const { email, password } = req.body;
 
+  const authError = new Error('Auth failed!');
+  authError.status = 401;
+
   let user;
 
   User.findOne({ email })
     .then(fetchedUser => {
-      if (!fetchedUser)
-        return res.status(401).json({ message: 'Auth failed!' });
+      if (!fetchedUser) throw authError;
 
       user = fetchedUser;
       return bcrypt.compare(password, user.password);
     })
     .then(passwordsDoMatch => {
-      if (!passwordsDoMatch)
-        return res.status(401).json({ message: 'Auth failed!' });
+      if (!passwordsDoMatch) throw authError;
 
       const token = jwt.sign(
         { userId: user._id, email: user.email },
         process.env.JWT_SECRET,
         { expiresIn: '1h' }
       );
+
+      res.status(200).json({ message: 'Auth successful!', token });
     })
     .catch(error => {
-      res.status(500).json({ message: 'Something went wrong!', error });
+      const statusCode = error.status || 500;
+
+      if (statusCode === 401) {
+        res.status(statusCode).json({ message: error.message });
+      } else {
+        res.status(statusCode).json({ message: 'Something went wrong!' });
+      }
     });
 });
 

@@ -7,12 +7,17 @@ import { AuthData } from './auth-data.model';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private _token: string;
+  private _isAuthenticated = false;
   private _authStatusUpdated = new Subject<boolean>();
 
   constructor(private http: HttpClient) {}
 
   get token() {
     return this._token;
+  }
+
+  get isAuthenticated() {
+    return this._isAuthenticated;
   }
 
   get authStatusUpdated() {
@@ -44,7 +49,11 @@ export class AuthService {
         console.log(responseData.message);
 
         this._token = responseData.token;
-        this._authStatusUpdated.next(true);
+
+        if (this._token) {
+          this._isAuthenticated = true;
+          this._authStatusUpdated.next(true);
+        }
       });
   }
 }

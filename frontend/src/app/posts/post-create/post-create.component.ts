@@ -17,6 +17,7 @@ import { mimeType } from './mime-type.validator';
 export class PostCreateComponent implements OnInit {
   private mode: 'create' | 'edit' = 'create';
   private postId: string;
+  private creator: string;
 
   isLoading = false;
   enteredTitle = '';
@@ -84,7 +85,7 @@ export class PostCreateComponent implements OnInit {
     }
 
     if (this.mode === 'edit') {
-      this.postsService.updatePost(this.postId, title, content, image);
+      this.postsService.updatePost(this.postId, title, content, image, this.post.creator);
     }
 
     this.form.reset();

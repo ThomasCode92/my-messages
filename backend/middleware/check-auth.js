@@ -5,7 +5,10 @@ const checkAuth = (req, res, next) => {
 
   try {
     const token = authHeader.split(' ')[1];
-    jwt.verify(token, process.env.JWT_SECRET);
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+    req.userData = { userId: decodedToken.userId, email: decodedToken.email };
+
     next();
   } catch (error) {
     res.status(401).json({ message: 'Auth failed!' });

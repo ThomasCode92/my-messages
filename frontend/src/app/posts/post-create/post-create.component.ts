@@ -84,7 +84,7 @@ export class PostCreateComponent implements OnInit {
     }
 
     if (this.mode === 'edit') {
-      this.postsService.updatePost(this.postId, title, content, image);
+      this.postsService.updatePost(this.postId, title, content, image, null);
     }
 
     this.form.reset();

@@ -33,6 +33,7 @@ export class PostsService {
                 title: post.title,
                 content: post.content,
                 imagePath: post.imagePath,
+                creator: post.creator,
               };
             }),
             maxPosts: responseData.maxPosts,
@@ -41,6 +42,7 @@ export class PostsService {
       )
       .subscribe(postsData => {
         console.log(postsData.message);
+        console.log(postsData.posts);
 
         this._posts = postsData.posts;
         this._postsUpdated.next({
@@ -64,6 +66,7 @@ export class PostsService {
               title: responseData.post.title,
               content: responseData.post.content,
               imagePath: responseData.post.imagePath,
+              creator: responseData.post.creator,
             },
           };
         })
@@ -91,6 +94,7 @@ export class PostsService {
               title: responseData.post.title,
               content: responseData.post.content,
               imagePath: responseData.post.imagePath,
+              creator: responseData.post.creator,
             },
           };
         })
@@ -105,7 +109,8 @@ export class PostsService {
     postId: string,
     title: string,
     content: string,
-    image: File | string
+    image: File | string,
+    creator: string
   ) {
     let postData: FormData | Post;
 
@@ -115,7 +120,7 @@ export class PostsService {
       postData.append('content', content);
       postData.append('image', image, title);
     } else {
-      postData = { id: postId, title, content, imagePath: image };
+      postData = { id: postId, title, content, imagePath: image, creator };
     }
 
     this.http

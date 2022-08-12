@@ -76,7 +76,7 @@ router.post(
   multer({ storage }).single('image'),
   (req, res, next) => {
     const { title, content } = req.body;
-    const { file } = req;
+    const { file, userData } = req;
 
     const url = `${req.protocol}://${req.get('host')}`;
 
@@ -84,6 +84,7 @@ router.post(
       title,
       content,
       imagePath: `${url}/images/${file.filename}`,
+      creator: userData.userId,
     });
 
     post.save().then(createdPost => {

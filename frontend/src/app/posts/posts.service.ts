@@ -119,6 +119,7 @@ export class PostsService {
       postData.append('title', title);
       postData.append('content', content);
       postData.append('image', image, title);
+      postData.append('creator', creator);
     } else {
       postData = { id: postId, title, content, imagePath: image, creator };
     }

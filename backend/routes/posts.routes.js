@@ -99,7 +99,7 @@ router.put(
   multer({ storage }).single('image'),
   (req, res, next) => {
     const postId = req.params.id;
-    const { title, content } = req.body;
+    const { title, content, creator } = req.body;
     const { file, userData } = req;
 
     let { imagePath } = req.body;
@@ -109,7 +109,7 @@ router.put(
       imagePath = `${url}/images/${file.filename}`;
     }
 
-    const post = new Post({ _id: postId, title, content, imagePath });
+    const post = new Post({ _id: postId, title, content, imagePath, creator });
 
     Post.updateOne({ _id: postId, creator: userData.userId }, post).then(
       result => {

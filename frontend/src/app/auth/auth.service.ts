@@ -39,8 +39,14 @@ export class AuthService {
         'http://localhost:3000/api/user/signup',
         authData
       )
-      .subscribe(response => {
-        console.log(response);
+      .subscribe({
+        next: response => {
+          console.log(response.message);
+          this.router.navigate(['/login']);
+        },
+        error: error => {
+          this._authStatusUpdated.next(false);
+        },
       });
   }
 
@@ -72,31 +78,36 @@ export class AuthService {
         token: string;
         expiresIn: number;
       }>('http://localhost:3000/api/user/login', authData)
-      .subscribe(responseData => {
-        console.log(responseData.message);
+      .subscribe({
+        next: responseData => {
+          console.log(responseData.message);
 
-        const userId = responseData.userId;
-        const token = responseData.token;
+          const userId = responseData.userId;
+          const token = responseData.token;
 
-        this._token = token;
+          this._token = token;
 
-        if (userId && token) {
-          const expiresInDuration = responseData.expiresIn; // time in seconds
+          if (userId && token) {
+            const expiresInDuration = responseData.expiresIn; // time in seconds
 
-          this.setAuthTimer(expiresInDuration);
+            this.setAuthTimer(expiresInDuration);
 
-          const now = new Date();
-          const expirationTime = now.getTime() + expiresInDuration * 1000;
-          const expirationDate = new Date(expirationTime);
+            const now = new Date();
+            const expirationTime = now.getTime() + expiresInDuration * 1000;
+            const expirationDate = new Date(expirationTime);
 
-          this.saveAuthData(userId, token, expirationDate);
+            this.saveAuthData(userId, token, expirationDate);
 
-          this._userId = userId;
-          this._isAuthenticated = true;
-          this._authStatusUpdated.next(true);
+            this._userId = userId;
+            this._isAuthenticated = true;
+            this._authStatusUpdated.next(true);
 
-          this.router.navigate(['/']);
-        }
+            this.router.navigate(['/']);
+          }
+        },
+        error: error => {
+          this._authStatusUpdated.next(false);
+        },
       });
   }
 

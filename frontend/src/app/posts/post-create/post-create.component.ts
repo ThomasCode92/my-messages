@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Subscription } from 'rxjs';
 
+import { AuthService } from 'src/app/auth/auth.service';
 import { PostsService } from '../posts.service';
 
 import { Post } from '../post.model';
@@ -14,10 +16,10 @@ import { mimeType } from './mime-type.validator';
   templateUrl: './post-create.component.html',
   styleUrls: ['./post-create.component.css'],
 })
-export class PostCreateComponent implements OnInit {
+export class PostCreateComponent implements OnInit, OnDestroy {
   private mode: 'create' | 'edit' = 'create';
   private postId: string;
-  private creator: string;
+  private authStatusUpdatedSub: Subscription;
 
   isLoading = false;
   enteredTitle = '';
@@ -28,8 +30,9 @@ export class PostCreateComponent implements OnInit {
 
   constructor(
     private sanitizer: DomSanitizer,
-    private postsService: PostsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private postsService: PostsService
   ) {}
 
   ngOnInit() {
@@ -45,6 +48,12 @@ export class PostCreateComponent implements OnInit {
         validators: [Validators.required],
       }),
     });
+
+    this.authStatusUpdatedSub = this.authService.authStatusUpdated.subscribe(
+      (authStatus: boolean) => {
+        this.isLoading = false;
+      }
+    );
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
@@ -71,6 +80,10 @@ export class PostCreateComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.authStatusUpdatedSub.unsubscribe();
+  }
+
   onSavePost() {
     if (this.form.invalid) return;
 
@@ -85,7 +98,13 @@ export class PostCreateComponent implements OnInit {
     }
 
     if (this.mode === 'edit') {
-      this.postsService.updatePost(this.postId, title, content, image, this.post.creator);
+      this.postsService.updatePost(
+        this.postId,
+        title,
+        content,
+        image,
+        this.post.creator
+      );
     }
 
     this.form.reset();

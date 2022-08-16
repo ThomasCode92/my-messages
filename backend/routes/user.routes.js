@@ -19,7 +19,11 @@ router.post('/signup', (req, res, next) => {
       res.status(201).json({ message: 'User created successfully!', user });
     })
     .catch(error => {
-      res.status(500).json({ message: 'Something went wrong!', error });
+      if (error._message) {
+        res.status(401).json({ message: error._message });
+      } else {
+        res.status(500).json({ message: 'Something went wrong!', error });
+      }
     });
 });
 

@@ -1,55 +1,21 @@
 const express = require('express');
-const multer = require('multer');
 
 const checkAuth = require('../middleware/check-auth');
+const fileUpload = require('../middleware/file-upload');
 
 const postsController = require('../controllers/posts.controller');
 
 const router = express.Router();
 
-const MIME_TYPE_MAP = {
-  'image/png': 'png',
-  'image/jpg': 'jpg',
-  'image/jpeg': 'jpg',
-};
+router
+  .route('/')
+  .get(postsController.getPosts)
+  .post(checkAuth, fileUpload, postsController.addPost);
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const isValid = MIME_TYPE_MAP[file.mimetype];
-    let error = new Error('Invalid mime type!');
-
-    if (isValid) {
-      error = null;
-    }
-
-    cb(error, 'images');
-  },
-  filename: (req, file, cb) => {
-    const name = file.originalname.toLowerCase().split(' ').join('-');
-    const extension = MIME_TYPE_MAP[file.mimetype];
-
-    cb(null, `${name}-${Date.now()}.${extension}`);
-  },
-});
-
-router.get('/', postsController.getPosts);
-
-router.get('/:id', postsController.getPost);
-
-router.post(
-  '/',
-  checkAuth,
-  multer({ storage }).single('image'),
-  postsController.addPost
-);
-
-router.put(
-  '/:id',
-  checkAuth,
-  multer({ storage }).single('image'),
-  postsController.updatePost
-);
-
-router.delete('/:id', checkAuth, postsController.deletePost);
+router
+  .route('/:id')
+  .get(postsController.getPost)
+  .put(checkAuth, fileUpload, postsController.updatePost)
+  .delete(checkAuth, postsController.deletePost);
 
 module.exports = router;

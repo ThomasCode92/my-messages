@@ -4,15 +4,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-// Angular Material
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatInputModule } from '@angular/material/input';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { AngularMaterialModule } from './angular-material.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -42,14 +34,7 @@ import { ErrorInterceptor } from './error.interceptor';
     HttpClientModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    MatButtonModule,
-    MatCardModule,
-    MatDialogModule,
-    MatExpansionModule,
-    MatInputModule,
-    MatPaginatorModule,
-    MatProgressSpinnerModule,
-    MatToolbarModule,
+    AngularMaterialModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

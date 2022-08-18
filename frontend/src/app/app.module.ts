@@ -5,7 +5,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AngularMaterialModule } from './angular-material.module';
 import { AppRoutingModule } from './app-routing.module';
-import { AuthModule } from './auth/auth.module';
 import { PostsModule } from './posts/posts.module';
 
 import { AppComponent } from './app.component';
@@ -23,7 +22,6 @@ import { ErrorInterceptor } from './error.interceptor';
     HttpClientModule,
     AngularMaterialModule,
     AppRoutingModule,
-    AuthModule,
     PostsModule,
   ],
   providers: [

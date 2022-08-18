@@ -10,7 +10,7 @@ const app = express();
 
 mongoose
   .connect(
-    `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@mongodb:27017/mymessages?authSource=admin`
+    `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@mongodb:27017/${process.env.DB_NAME}?authSource=admin`
   )
   .then(() => {
     console.log('Connected to database');
